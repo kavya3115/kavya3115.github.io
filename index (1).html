@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavya T N — Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --accent: #c8974b;
+    --accent2: #4a6fa5;
+    --muted: #7a7a8a;
+    --card: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* --- NOISE TEXTURE OVERLAY --- */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* --- NAV --- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(245,240,232,0.85);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    border-bottom: 1px solid rgba(200,151,75,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  nav ul {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  nav ul a:hover { color: var(--accent); }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: 'DATA';
+    position: absolute;
+    right: -2rem; top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Playfair Display', serif;
+    font-size: 18rem;
+    font-weight: 900;
+    color: rgba(200,151,75,0.06);
+    letter-spacing: -1rem;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .hero-content { z-index: 2; }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    border-radius: 2px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+  }
+
+  h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 460px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-links {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-radius: 3px;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(200,151,75,0.3);
+  }
+
+  .btn-outline {
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+  }
+
+  .btn-outline:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: translateY(-2px);
+  }
+
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 4px 24px rgba(26,26,46,0.06);
+    border: 1px solid rgba(200,151,75,0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(26,26,46,0.12);
+  }
+
+  .stat-card:nth-child(2) { animation-delay: 0.1s; margin-top: 2rem; }
+  .stat-card:nth-child(3) { animation-delay: 0.2s; }
+  .stat-card:nth-child(4) { animation-delay: 0.3s; margin-top: 2rem; }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* --- SECTIONS --- */
+  section {
+    padding: 6rem 4rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -1px;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(200,151,75,0.4), transparent);
+  }
+
+  /* --- ABOUT --- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+
+  .cert-badges {
+    display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.5rem;
+  }
+
+  .badge {
+    padding: 0.5rem 1.2rem;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
+  }
+
+  .skills-panel {
+    background: var(--ink);
+    border-radius: 8px;
+    padding: 2.5rem;
+    color: var(--paper);
+  }
+
+  .skills-panel h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: var(--accent);
+  }
+
+  .skill-group {
+    margin-bottom: 1.8rem;
+  }
+
+  .skill-group-label {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+    margin-bottom: 0.8rem;
+  }
+
+  .skill-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+
+  .skill-tag {
+    padding: 0.35rem 0.9rem;
+    background: rgba(200,151,75,0.15);
+    border: 1px solid rgba(200,151,75,0.3);
+    color: var(--paper);
+    font-size: 0.82rem;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .skill-tag:hover { background: rgba(200,151,75,0.35); }
+
+  /* --- EXPERIENCE --- */
+  .experience-bg { background: var(--card); }
+
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-left: 2rem;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.35rem; top: 0.4rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 3px rgba(200,151,75,0.3);
+  }
+
+  .timeline-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .timeline-date {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .timeline-company {
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding: 0.2rem 0.7rem;
+    background: rgba(74,111,165,0.1);
+    border-radius: 20px;
+    color: var(--accent2);
+  }
+
+  .timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+  }
+
+  .timeline-desc {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .timeline-desc ul {
+    list-style: none;
+    margin-top: 0.5rem;
+  }
+
+  .timeline-desc li {
+    padding: 0.3rem 0 0.3rem 1.2rem;
+    position: relative;
+    color: #555;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .timeline-desc li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.75rem;
+    top: 0.4rem;
+  }
+
+  /* --- PROJECTS --- */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 2rem;
+    border: 1px solid rgba(26,26,46,0.08);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--accent), var(--accent2));
+  }
+
+  .project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(26,26,46,0.12);
+  }
+
+  .project-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+  }
+
+  .project-desc {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .project-tech {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.2rem;
+  }
+
+  .tech-pill {
+    padding: 0.25rem 0.7rem;
+    background: rgba(200,151,75,0.1);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 500;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  /* --- CONTACT --- */
+  .contact-bg { background: var(--ink); color: var(--paper); }
+
+  .contact-bg h2 { color: var(--paper); }
+  .contact-bg .section-number { color: var(--accent); }
+  .contact-bg .section-line { background: linear-gradient(to right, rgba(200,151,75,0.4), transparent); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .contact-text {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: rgba(245,240,232,0.7);
+    margin-bottom: 2rem;
+  }
+
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .contact-item {
+    display: flex; align-items: center; gap: 1rem;
+    color: rgba(245,240,232,0.85);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .contact-item:hover { color: var(--accent); }
+
+  .contact-icon {
+    width: 42px; height: 42px;
+    background: rgba(200,151,75,0.15);
+    border: 1px solid rgba(200,151,75,0.3);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+
+  .contact-item:hover .contact-icon { background: rgba(200,151,75,0.35); }
+
+  .contact-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--paper);
+    letter-spacing: -1px;
+  }
+
+  .contact-tagline em { color: var(--accent); font-style: italic; }
+
+  /* --- FOOTER --- */
+  footer {
+    background: #0f0f1e;
+    color: rgba(245,240,232,0.4);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* --- ANIMATIONS --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-content { animation: fadeUp 0.7s ease both; }
+  .hero-visual { animation: fadeUp 0.7s ease 0.2s both; }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { gap: 1.5rem; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 3rem; }
+    .hero::after { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    nav ul { display: none; }
+    h1 { font-size: 2.5rem; }
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-number { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Kavya <span>T N</span></div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">✦ Available for Opportunities</div>
+    <h1>Data <em>Analyst</em> &amp; Six Sigma Blackbelt</h1>
+    <p class="hero-desc">
+      Turning complex datasets into clear, actionable decisions. Experienced across Polestar, Griffith Foods, BASF, and Bayer — delivering dashboards and insights that drive real business outcomes.
+    </p>
+    <div class="hero-links">
+      <a href="#contact" class="btn btn-primary">Get in Touch →</a>
+      <a href="#experience" class="btn btn-outline">View Experience</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-number">19+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Global Companies</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2×</div>
+        <div class="stat-label">Six Sigma Certified</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4+</div>
+        <div class="stat-label">Languages Spoken</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>About Me</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm a Certified Lean Six Sigma Black Belt and Data Analyst with a passion for turning raw data into meaningful narratives. Based in Gothenburg, Sweden, I bring over 19 years of cross-industry experience spanning agri-tech, automotive, food, and chemicals.
+      </p>
+      <p>
+        My toolkit spans Python, Power BI, Tableau, Salesforce, and Excel — but beyond the tools, I excel at bridging the gap between data and decision-makers, making insights accessible and actionable across all levels of an organisation.
+      </p>
+      <p>
+        I thrive in cross-functional, global environments and bring a customer-first mindset to every analysis I undertake.
+      </p>
+      <div class="cert-badges">
+        <span class="badge">🎓 Six Sigma Green Belt</span>
+        <span class="badge">🏆 Six Sigma Black Belt</span>
+        <span class="badge">🎓 B.Sc. Computer Science</span>
+      </div>
+    </div>
+    <div class="skills-panel">
+      <h3>Core Skills</h3>
+      <div class="skill-group">
+        <div class="skill-group-label">Programming & Tools</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Pandas</span>
+          <span class="skill-tag">Matplotlib</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">VS Code</span>
+          <span class="skill-tag">MSBI</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Data Visualisation</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Power BI</span>
+          <span class="skill-tag">Tableau</span>
+          <span class="skill-tag">Salesforce</span>
+          <span class="skill-tag">Excel</span>
+          <span class="skill-tag">Plotly</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Analytics</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Forecasting</span>
+          <span class="skill-tag">Business Insights</span>
+          <span class="skill-tag">Process Optimisation</span>
+          <span class="skill-tag">Decision Support</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Languages</div>
+        <div class="skill-tags">
+          <span class="skill-tag">English</span>
+          <span class="skill-tag">Kannada</span>
+          <span class="skill-tag">Swedish</span>
+          <span class="skill-tag">Hindi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="experience-bg">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>Experience</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <span class="timeline-date">Mar 2025 — Sep 2025</span>
+        <span class="timeline-company">Polestar · Gothenburg, Sweden</span>
+      </div>
+      <div class="timeline-title">Data Analyst Intern</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>Designed Salesforce dashboards that reduced escalation handling time by 15% and improved customer satisfaction.</li>
+          <li>Built Knowledge Article, Global Customer Operations, Goodwill & Buyback, and CEC dashboards to support global decision-making.</li>
+          <li>Volunteered to assist with Polestar 4 internet issue escalations, ensuring smoother customer experience.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <span class="timeline-date">Aug 2022 — May 2023</span>
+        <span class="timeline-company">Griffith India Pvt. Ltd.</span>
+      </div>
+      <div class="timeline-title">Assistant Manager — Analytics & Customer Service</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>Delivered Power BI dashboards improving visibility into customer service performance.</li>
+          <li>Trained cross-functional teams on data tools, enhancing data literacy organisation-wide.</li>
+          <li>Presented monthly business reviews to senior management, translating complex data into actionable insights.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <span class="timeline-date">Jan 2017 — Jun 2021</span>
+        <span class="timeline-company">BASF Vegetable Seeds</span>
+      </div>
+      <div class="timeline-title">Regional Sales Planning Key User</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>Managed sales and demand planning data across APAC, ensuring accuracy and consistency.</li>
+          <li>Designed and maintained reporting dashboards and budgeting solutions to support business decisions.</li>
+          <li>Partnered with global teams on system implementations including Movex and DMP tools.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <span class="timeline-date">Jul 2011 — Dec 2016</span>
+        <span class="timeline-company">Bayer Seeds (Nunhems) · Bangalore</span>
+      </div>
+      <div class="timeline-title">Secretary</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>Supported Country Sales Manager with sales planning, reporting, and pricing activities across multiple countries.</li>
+          <li>Recognised with awards for successful marketing communication projects during Bayer integration.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <span class="timeline-date">Jan 2006 — Sep 2009</span>
+        <span class="timeline-company">STG Intl Ltd. · Bangalore</span>
+      </div>
+      <div class="timeline-title">Centre Manager</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>Led a team of 8–10 staff, managing operations, sales, marketing, and financial activities.</li>
+          <li>Organised seminars bridging industry requirements and job market skills.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>Projects</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-icon">✈️</div>
+      <div class="project-title">Flight Data Analysis</div>
+      <p class="project-desc">Analysed large flight datasets to extract trends, patterns, and operational insights using Python and Pandas, uncovering meaningful patterns in raw data.</p>
+      <div class="project-tech">
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">Pandas</span>
+        <span class="tech-pill">Data Analysis</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">🌦️</div>
+      <div class="project-title">Nordic Countries Weather Report</div>
+      <p class="project-desc">Built an interactive dashboard visualising weather data retrieved from APIs for multiple Nordic countries, providing at-a-glance climate comparisons.</p>
+      <div class="project-tech">
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">Plotly</span>
+        <span class="tech-pill">APIs</span>
+        <span class="tech-pill">Dashboard</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-icon">🚔</div>
+      <div class="project-title">Polisen Incidents in Sweden</div>
+      <p class="project-desc">Processed JSON datasets and created geospatial visualisations with Plotly to map and analyse police incidents across Sweden by location.</p>
+      <div class="project-tech">
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">Plotly</span>
+        <span class="tech-pill">JSON</span>
+        <span class="tech-pill">Geospatial</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-bg">
+  <div class="section-header">
+    <span class="section-number" style="color:var(--accent)">04</span>
+    <h2>Let's Connect</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-tagline">Open to new <em>opportunities</em> in data & analytics.</p>
+      <p class="contact-text" style="margin-top:1.5rem;">
+        Whether you're looking for a data analyst, a dashboard specialist, or someone who can translate numbers into strategy — I'd love to hear from you.
+      </p>
+      <div class="contact-items">
+        <a href="mailto:kavya.tn@gmail.com" class="contact-item">
+          <div class="contact-icon">📧</div>
+          kavya.tn@gmail.com
+        </a>
+        <a href="tel:+460769779858" class="contact-item">
+          <div class="contact-icon">📱</div>
+          +46 076 977 9858
+        </a>
+        <a href="https://www.linkedin.com/in/kavya-t-n-4025b114/" target="_blank" class="contact-item">
+          <div class="contact-icon">💼</div>
+          LinkedIn Profile
+        </a>
+        <span class="contact-item">
+          <div class="contact-icon">📍</div>
+          Gothenburg, Sweden
+        </span>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+      <div style="background:rgba(245,240,232,0.05); border:1px solid rgba(200,151,75,0.2); border-radius:8px; padding:2rem;">
+        <div style="font-family:'Playfair Display',serif; font-size:1rem; color:var(--accent); margin-bottom:1rem;">Industries Worked In</div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.6rem;">
+          <span style="padding:0.4rem 1rem; border:1px solid rgba(245,240,232,0.2); border-radius:20px; font-size:0.8rem; color:rgba(245,240,232,0.7);">🚗 Automotive</span>
+          <span style="padding:0.4rem 1rem; border:1px solid rgba(245,240,232,0.2); border-radius:20px; font-size:0.8rem; color:rgba(245,240,232,0.7);">🌾 Agri-Tech</span>
+          <span style="padding:0.4rem 1rem; border:1px solid rgba(245,240,232,0.2); border-radius:20px; font-size:0.8rem; color:rgba(245,240,232,0.7);">🧪 Chemicals</span>
+          <span style="padding:0.4rem 1rem; border:1px solid rgba(245,240,232,0.2); border-radius:20px; font-size:0.8rem; color:rgba(245,240,232,0.7);">🍲 Food Industry</span>
+          <span style="padding:0.4rem 1rem; border:1px solid rgba(245,240,232,0.2); border-radius:20px; font-size:0.8rem; color:rgba(245,240,232,0.7);">💻 Technology</span>
+        </div>
+      </div>
+      <div style="background:rgba(200,151,75,0.1); border:1px solid rgba(200,151,75,0.25); border-radius:8px; padding:2rem;">
+        <div style="font-size:0.85rem; color:rgba(245,240,232,0.6); line-height:1.8;">
+          🌍 Based in <strong style="color:var(--paper)">Gothenburg, Sweden</strong><br>
+          🗣️ English · Kannada · Swedish · Hindi<br>
+          🎓 B.Sc. Computer Science, Bangalore University<br>
+          🏆 Lean Six Sigma Black Belt Certified
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Kavya T N · Data Analyst · Gothenburg, Sweden · Built with GitHub Pages</p>
+</footer>
+
+<script>
+  // Scroll animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.timeline-item, .project-card, .stat-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
